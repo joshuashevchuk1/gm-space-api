@@ -2,7 +2,7 @@
 
 from fastapi import FastAPI
 import uvicorn
-from routes import routers
+from handlers import handlers
 
 class GMApp:
     def __init__(self, port: int):
@@ -15,7 +15,7 @@ class GMApp:
         self.include_routes()
 
     def include_routes(self):
-        for route in routers:
+        for route in handlers:
             self.app.include_router(route)
 
     def run_server(self):

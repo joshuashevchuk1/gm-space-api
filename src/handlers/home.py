@@ -1,4 +1,4 @@
-# routes/home.py
+# handlers/home.py
 
 from fastapi import APIRouter
 from fastapi.responses import PlainTextResponse

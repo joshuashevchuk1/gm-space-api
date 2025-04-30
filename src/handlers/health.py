@@ -1,4 +1,4 @@
-# routes/health.py
+# handlers/health.py
 
 from fastapi import APIRouter
 from pydantic import BaseModel
