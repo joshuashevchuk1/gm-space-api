@@ -2,7 +2,7 @@
 
 from fastapi import APIRouter
 from fastapi.responses import PlainTextResponse
-from
+from src.google_meet.auth import GoogleAuth
 
 router = APIRouter()
 
@@ -16,4 +16,5 @@ router = APIRouter()
 )
 
 def auth():
-
+    googleAuth = GoogleAuth()
+    googleAuth.set_credentials()

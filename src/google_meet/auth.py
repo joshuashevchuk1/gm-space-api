@@ -7,9 +7,9 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 
 class GoogleAuth():
     def __init__(self):
-        creds = None
+        self.creds = None
 
-    def set_credentials(self) -> Credentials:
+    def set_credentials(self):
         """Ensure valid credentials for calling the Meet REST API."""
         CLIENT_SECRET_FILE = "./oauth.json"
 
@@ -32,5 +32,3 @@ class GoogleAuth():
         if self.creds is not None:
             with open("token.json", "w") as f:
                 f.write(self.creds.to_json())
-
-        return self.creds
