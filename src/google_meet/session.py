@@ -1,0 +1,71 @@
+
+from google.apps import meet_v2 as meet
+from google.apps import meet
+from google.cloud import pubsub_v1
+import json
+
+class GoogleSession():
+    def __init__(self):
+        self.creds = None
+        self.space_name = None
+        self.topic_name = None
+        self.subscription_name = None
+
+    def on_conference_ended(self, message: pubsub_v1.subscriber.message.Message):
+        """Display information about a conference when ended."""
+        payload = json.loads(message.data)
+        resource_name = payload.get("conferenceRecord").get("name")
+        client = meet.ConferenceRecordsServiceClient(credentials=self.creds)
+        conference = client.get_conference_record(name=resource_name)
+        print(f"Conference (ID {conference.name}) ended at {conference.end_time.rfc3339()}")
+
+    def on_recording_ready(self, message: pubsub_v1.subscriber.message.Message):
+        """Display information about a recorded meeting when artifact is ready."""
+        payload = json.loads(message.data)
+        resource_name = payload.get("recording").get("name")
+        client = meet.ConferenceRecordsServiceClient(credentials=self.creds)
+        recording = client.get_recording(name=resource_name)
+        print(f"Recording available at {recording.drive_destination.export_uri}")
+
+    def on_transcript_ready(self, message: pubsub_v1.subscriber.message.Message):
+        """Display information about a meeting transcript when artifact is ready."""
+        payload = json.loads(message.data)
+        resource_name = payload.get("transcript").get("name")
+        transcript_id = resource_name.split('/')[-1]
+
+        client = meet.ConferenceRecordsServiceClient(credentials=self.creds)
+        transcript = client.get_transcript(name=resource_name)
+
+        print("transcript payload is:", str(payload))
+        print("transcript is:", transcript.name)
+        print("Transcript ID:", transcript_id)
+        print(f"Transcript available at {transcript.docs_destination.export_uri}")
+
+    def on_message(self, message: pubsub_v1.subscriber.message.Message) -> None:
+        """Handles an incoming event from the Google Cloud Pub/Sub API."""
+        event_type = message.attributes.get("ce-type")
+        handler = {
+            "google.workspace.meet.conference.v2.ended": self.on_conference_ended,
+            "google.workspace.meet.recording.v2.fileGenerated": self.on_recording_ready,
+            "google.workspace.meet.transcript.v2.fileGenerated": self.on_transcript_ready,
+        }.get(event_type)
+
+        try:
+            if handler is not None:
+                handler(message)
+            message.ack()
+        except Exception as error:
+            print("Unable to process event")
+            print(error)
+
+    def listen_for_events(self):
+        """Subscribe to events on the subscription."""
+        subscriber = pubsub_v1.SubscriberClient()
+        with subscriber:
+            future = subscriber.subscribe(self.subscription_name, callback=self.on_message)
+            print("Listening for events")
+            future.result()
+
+    def start_session(self):
+        self.listen_for_events()
+
