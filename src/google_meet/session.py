@@ -1,3 +1,4 @@
+import threading
 
 from google.apps import meet_v2 as meet
 from google.apps import meet
@@ -59,13 +60,14 @@ class GoogleSession():
             print(error)
 
     def listen_for_events(self):
-        """Subscribe to events on the subscription."""
+        """Blocking listener that runs in a background thread."""
         subscriber = pubsub_v1.SubscriberClient()
         with subscriber:
             future = subscriber.subscribe(self.subscription_name, callback=self.on_message)
-            print("Listening for events")
-            future.result()
+            print("Listening for events...")
+            future.result()  # This blocks, but it's okay in a background thread
 
     def start_session(self):
-        self.listen_for_events()
-
+        """Run the listener in a background thread so it doesn't block the main app."""
+        listener_thread = threading.Thread(target=self.listen_for_events, daemon=True)
+        listener_thread.start()
