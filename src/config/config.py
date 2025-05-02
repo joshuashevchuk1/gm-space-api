@@ -14,7 +14,7 @@ class Config:
             cls._instance._init(env, path)
         return cls._instance
 
-    def __init__(self, env=None, path="../config"):
+    def __init__(self, env=None, path="./config"):
         # Make sure __init__ does not reinitialize if it has already been initialized
         if not hasattr(self, 'initialized'):
             self.env = env or os.getenv('STAGE', 'dev')
@@ -56,14 +56,20 @@ class Config:
         # Attach the root logger to the config
         self.logging = logging.getLogger()
 
-    def get_host(self):
-        return self.get('database.host')
+    def get_mongo_host(self):
+        return self.get('mongo.host')
 
-    def get_port(self):
-        return self.get('database.port')
+    def get_mongo_port(self):
+        return self.get('mongo.port')
 
-    def get_database(self):
-        return self.get('database.name')
+    def get_mongo_name(self):
+        return self.get('mongo.name')
+
+    def get_mongo_user(self):
+        return self.get('database.user')
+
+    def get_mongo_pass(self):
+        return self.get('database.pass')
 
     def get_download_path(self):
         return self.get("download_path")

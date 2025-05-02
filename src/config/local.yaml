@@ -1,0 +1,10 @@
+mongo:
+  host: "localhost"
+  port: 3306
+  user: "admin"
+  pass: "admin"
+  name: "gm-space-api"
+logging:
+  version: 1 # <-- This is required
+  level: "DEBUG"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"

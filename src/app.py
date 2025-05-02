@@ -12,9 +12,10 @@ class GMApp:
             description="A modular FastAPI app with home and health check endpoints.",
             version="1.0.0",
         )
-        self.include_routes()
+        self._include_routes()
+        self.db = None
 
-    def include_routes(self):
+    def _include_routes(self):
         for route in handlers:
             self.app.include_router(route)
 
