@@ -23,5 +23,5 @@ class GMApp:
         uvicorn.run(self.app, host="0.0.0.0", port=self.port)
 
 if __name__ == "__main__":
-    app = GMApp(port=8000)
+    app = GMApp(port=8010)
     app.run_server()
