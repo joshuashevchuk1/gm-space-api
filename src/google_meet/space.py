@@ -1,3 +1,4 @@
+from google.auth.transport import requests
 from src.google_meet.auth import GoogleAuth
 from google.apps import meet_v2 as meet
 
