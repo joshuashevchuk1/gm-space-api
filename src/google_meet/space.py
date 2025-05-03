@@ -28,10 +28,7 @@ class GoogleSpace():
             body = {
                 'targetResource': f"//meet.googleapis.com/{space_name}",
                 "eventTypes": [
-                    "google.workspace.meet.conference.v2.started",
                     "google.workspace.meet.conference.v2.ended",
-                    "google.workspace.meet.participant.v2.joined",
-                    "google.workspace.meet.participant.v2.left",
                     "google.workspace.meet.recording.v2.fileGenerated",
                     "google.workspace.meet.transcript.v2.fileGenerated",
                 ],
