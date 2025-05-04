@@ -1,10 +1,6 @@
 # handlers/auth.py
 
-import os
-import requests
-
 from google.auth.transport import requests as google_requests
-from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 
 
