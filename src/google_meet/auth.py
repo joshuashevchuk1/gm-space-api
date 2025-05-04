@@ -1,20 +1,21 @@
 # handlers/auth.py
 
 import os
-from google.auth.transport import requests
+import requests
+
+from google.auth.transport import requests as google_requests
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
+
 
 class GoogleAuth():
     def __init__(self):
         self.creds = None
+        self.base_api_url = None
 
     def set_credentials(self):
         """Ensure valid credentials for calling the Meet REST API."""
         CLIENT_SECRET_FILE = "./oauth.json"
-
-        if os.path.exists('token.json'):
-            self.creds = Credentials.from_authorized_user_file('token.json')
 
         if self.creds is None:
             flow = InstalledAppFlow.from_client_secrets_file(
@@ -27,8 +28,4 @@ class GoogleAuth():
             self.creds = flow.credentials
 
         if self.creds and self.creds.expired:
-            self.creds.refresh(requests.Request())
-
-        if self.creds is not None:
-            with open("token.json", "w") as f:
-                f.write(self.creds.to_json())
+            self.creds.refresh(google_requests.Request())
