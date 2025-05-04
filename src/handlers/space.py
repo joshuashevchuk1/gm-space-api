@@ -17,6 +17,5 @@ router = APIRouter()
 
 def create_space():
     googleSpace = GoogleSpace()
-    googleSpace.create_space()
-    space = googleSpace.space
-    return space.uri
+    response = googleSpace.create_space()
+    print("response : ", str(response))
