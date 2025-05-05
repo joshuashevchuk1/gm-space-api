@@ -56,6 +56,12 @@ class Config:
         # Attach the root logger to the config
         self.logging = logging.getLogger()
 
+    def get_g_meet_topic_name(self):
+        return self.get('g_meet.topic_name')
+
+    def get_g_meet_subscription_name(self):
+        return self.get('g_meet.subscription_name')
+
     def get_mongo_host(self):
         return self.get('mongo.host')
 

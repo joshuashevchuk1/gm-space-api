@@ -6,6 +6,7 @@ from google.apps import meet
 from google.cloud import pubsub_v1
 import json
 
+from src.config import config
 from src.google_meet.space import GoogleSpace
 
 
@@ -13,8 +14,9 @@ class GoogleSession():
     def __init__(self):
         self.creds = None
         self.space_name = None
-        self.topic_name = None
-        self.subscription_name = None
+        self.config = config.Config()
+        self.topic_name = self.config.get_g_meet_topic_name()
+        self.subscription_name = self.config.get_g_meet_subscription_name()
 
     def _subscribe_to_space(self):
         """Subscribe to events for a meeting space."""
