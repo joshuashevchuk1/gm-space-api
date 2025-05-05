@@ -113,8 +113,9 @@ class GoogleSession():
             response = googleSpace.create_space()
             print("response : ", str(response))
             self.creds = googleSpace.creds
-            print('creds are : ', self.creds)
             self.space_name = googleSpace.space_name
+            print(f"{googleSpace.space_uri}")
+            print(f"{googleSpace.space_name}")
             print('leaving _create_space')
         except:
             traceback.print_exc()
