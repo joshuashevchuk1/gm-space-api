@@ -16,6 +16,6 @@ router = APIRouter()
     responses={200: {"description": "Google Space Session started"}},
 )
 
-def start_google_session():
+def start_google_pub_sub_session():
     googleSession = GoogleSession()
     googleSession.start_session()
