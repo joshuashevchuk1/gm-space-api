@@ -1,3 +1,6 @@
+g_meet:
+  topic_name: "projects/zd-hackathon-2025/topics/workspace-events"
+  subscription_name: "projects/zd-hackathon-2025/subscriptions/workspace-events-sub"
 mongo:
   host: "localhost"
   port: 27107
