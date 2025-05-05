@@ -2,10 +2,11 @@
 
 from .home import router as home
 from .health import router as health
-from .auth import router as auth
+from .space import router as space
+from .session import router as session
 
 handlers = [
     home,
     health,
-    auth
+    space
 ]

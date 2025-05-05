@@ -12,9 +12,10 @@ class GMApp:
             description="A modular FastAPI app with home and health check endpoints.",
             version="1.0.0",
         )
-        self.include_routes()
+        self._include_routes()
+        self.db = None
 
-    def include_routes(self):
+    def _include_routes(self):
         for route in handlers:
             self.app.include_router(route)
 
@@ -22,5 +23,5 @@ class GMApp:
         uvicorn.run(self.app, host="0.0.0.0", port=self.port)
 
 if __name__ == "__main__":
-    app = GMApp(port=8000)
+    app = GMApp(port=8010)
     app.run_server()

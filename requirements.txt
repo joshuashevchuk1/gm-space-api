@@ -5,3 +5,5 @@ google~=3.0.0
 protobuf~=5.29.4
 google-auth-oauthlib~=1.2.1
 pydantic~=2.11.3
+mongoengine~=0.29.1
+requests~=2.32.3

@@ -1,0 +1,13 @@
+g_meet:
+  topic_name: "projects/zd-hackathon-2025/topics/workspace-events"
+  subscription_name: "projects/zd-hackathon-2025/subscriptions/workspace-events-sub"
+mongo:
+  host: "localhost"
+  port: 27107
+  user: "admin"
+  pass: "admin"
+  name: "gm_meet"
+logging:
+  version: 1 # <-- This is required
+  level: "DEBUG"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
