@@ -1,4 +1,5 @@
 import threading
+import traceback
 
 from google.auth.transport import requests as google_requests
 from google.apps import meet_v2 as meet
@@ -106,11 +107,17 @@ class GoogleSession():
             future.result()  # This blocks, but it's okay in a background thread
 
     def _create_space(self):
+        print('entering _create_space')
         googleSpace = GoogleSpace()
-        response = googleSpace.create_space()
-        print("response : ", str(response))
-        self.creds = googleSpace.creds
-        self.space_name = googleSpace.space_name
+        try:
+            response = googleSpace.create_space()
+            print("response : ", str(response))
+            self.creds = googleSpace.creds
+            print('creds are : ', self.creds)
+            self.space_name = googleSpace.space_name
+            print('leaving _create_space')
+        except:
+            traceback.print_exc()
 
     def start_session(self):
         """Run the listener in a background thread so it doesn't block the main app."""
