@@ -4,7 +4,6 @@ from fastapi import APIRouter
 from fastapi.responses import PlainTextResponse
 
 from src.google_meet.session import GoogleSession
-from src.google_meet.space import GoogleSpace
 
 router = APIRouter()
 
