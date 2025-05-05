@@ -17,9 +17,6 @@ router = APIRouter()
     responses={200: {"description": "Google Space Session started"}},
 )
 
-def create_space():
-    googleSpace = GoogleSpace()
-    response = googleSpace.create_space()
-    print("response : ", str(response))
+def start_google_session():
     googleSession = GoogleSession()
-    googleSession.listen_for_events()
+    googleSession.start_session()

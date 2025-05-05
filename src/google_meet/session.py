@@ -1,9 +1,13 @@
 import threading
 
+from google.auth.transport import requests as google_requests
 from google.apps import meet_v2 as meet
 from google.apps import meet
 from google.cloud import pubsub_v1
 import json
+
+from src.google_meet.space import GoogleSpace
+
 
 class GoogleSession():
     def __init__(self):
@@ -11,6 +15,37 @@ class GoogleSession():
         self.space_name = None
         self.topic_name = None
         self.subscription_name = None
+
+    def _subscribe_to_space(self):
+        """Subscribe to events for a meeting space."""
+        session = google_requests.AuthorizedSession(self.creds)
+        body = {
+            'targetResource': f"//meet.googleapis.com/{self.space_name}",
+            "eventTypes": [
+                "google.workspace.meet.conference.v2.started",
+                "google.workspace.meet.conference.v2.ended",
+                "google.workspace.meet.recording.v2.fileGenerated",
+                "google.workspace.meet.transcript.v2.fileGenerated",
+            ],
+            "payloadOptions": {
+                "includeResource": False,
+            },
+            "notificationEndpoint": {
+                "pubsubTopic": self.topic_name
+            },
+            "ttl": "86400s",
+        }
+        response = session.post("https://workspaceevents.googleapis.com/v1/subscriptions", json=body)
+        if response.status_code == 403:
+            raise Exception("got 403 : ", str(response.content))
+
+    def on_conference_started(self, message: pubsub_v1.subscriber.message.Message):
+        """Display information about a conference when started."""
+        payload = json.loads(message.data)
+        resource_name = payload.get("conferenceRecord").get("name")
+        client = meet.ConferenceRecordsServiceClient(credentials=self.creds)
+        conference = client.get_conference_record(name=resource_name)
+        print(f"Conference (ID {conference.name}) started at {conference.start_time.rfc3339()}")
 
     def on_conference_ended(self, message: pubsub_v1.subscriber.message.Message):
         """Display information about a conference when ended."""
@@ -46,6 +81,7 @@ class GoogleSession():
         """Handles an incoming event from the Google Cloud Pub/Sub API."""
         event_type = message.attributes.get("ce-type")
         handler = {
+            "google.workspace.meet.conference.v2.started":self.on_conference_started,
             "google.workspace.meet.conference.v2.ended": self.on_conference_ended,
             "google.workspace.meet.recording.v2.fileGenerated": self.on_recording_ready,
             "google.workspace.meet.transcript.v2.fileGenerated": self.on_transcript_ready,
@@ -67,7 +103,16 @@ class GoogleSession():
             print("Listening for events...")
             future.result()  # This blocks, but it's okay in a background thread
 
+    def _create_space(self):
+        googleSpace = GoogleSpace()
+        response = googleSpace.create_space()
+        print("response : ", str(response))
+        self.creds = googleSpace.creds
+        self.space_name = googleSpace.space_name
+
     def start_session(self):
         """Run the listener in a background thread so it doesn't block the main app."""
+        self._create_space()
+        self._subscribe_to_space()
         listener_thread = threading.Thread(target=self.listen_for_events, daemon=True)
         listener_thread.start()
