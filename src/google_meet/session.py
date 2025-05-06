@@ -1,4 +1,6 @@
+import logging
 import threading
+import traceback
 
 from google.auth.transport import requests as google_requests
 from google.apps import meet_v2 as meet
@@ -8,6 +10,7 @@ import json
 
 from src.config import config
 from src.google_meet.space import GoogleSpace
+from src.google_meet.transcript import GoogleTranscript
 
 
 class GoogleSession():
@@ -69,15 +72,23 @@ class GoogleSession():
         """Display information about a meeting transcript when artifact is ready."""
         payload = json.loads(message.data)
         resource_name = payload.get("transcript").get("name")
-        transcript_id = resource_name.split('/')[-1]
 
+        print("got transcript name")
         client = meet.ConferenceRecordsServiceClient(credentials=self.creds)
+        print("got client")
         transcript = client.get_transcript(name=resource_name)
-
+        print("got transcript")
         print("transcript payload is:", str(payload))
         print("transcript is:", transcript.name)
-        print("Transcript ID:", transcript_id)
         print(f"Transcript available at {transcript.docs_destination.export_uri}")
+        print("trying to download google_doc")
+        try:
+            google_transcript = GoogleTranscript()
+            google_transcript.url = transcript.docs_destination.export_uri
+            google_transcript.download_google_doc(export_mime='application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                                                  output_file=f'temp.docx')
+        except Exception:
+            traceback.print_exc()
 
     def on_message(self, message: pubsub_v1.subscriber.message.Message) -> None:
         """Handles an incoming event from the Google Cloud Pub/Sub API."""
@@ -106,11 +117,18 @@ class GoogleSession():
             future.result()  # This blocks, but it's okay in a background thread
 
     def _create_space(self):
+        print('entering _create_space')
         googleSpace = GoogleSpace()
-        response = googleSpace.create_space()
-        print("response : ", str(response))
-        self.creds = googleSpace.creds
-        self.space_name = googleSpace.space_name
+        try:
+            response = googleSpace.create_space()
+            print("response : ", str(response))
+            self.creds = googleSpace.creds
+            self.space_name = googleSpace.space_name
+            print(f"{googleSpace.space_uri}")
+            print(f"{googleSpace.space_name}")
+            print('leaving _create_space')
+        except:
+            traceback.print_exc()
 
     def start_session(self):
         """Run the listener in a background thread so it doesn't block the main app."""

@@ -8,5 +8,6 @@ from .session import router as session
 handlers = [
     home,
     health,
-    space
+    space,
+    session
 ]
