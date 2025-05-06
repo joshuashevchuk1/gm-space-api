@@ -43,3 +43,6 @@ class GoogleTranscript():
         else:
             print("Transcript ID not found.")
         return transcript_id
+
+    def upload_transcript(self):
+        return
