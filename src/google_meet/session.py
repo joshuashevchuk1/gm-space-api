@@ -2,7 +2,6 @@ import logging
 import threading
 import traceback
 
-from exceptiongroup import print_exc
 from google.auth.transport import requests as google_requests
 from google.apps import meet_v2 as meet
 from google.apps import meet
@@ -74,18 +73,21 @@ class GoogleSession():
         payload = json.loads(message.data)
         resource_name = payload.get("transcript").get("name")
 
-        logging.info("got transcript name")
+        print("got transcript name")
         client = meet.ConferenceRecordsServiceClient(credentials=self.creds)
-        logging.info("got client")
+        print("got client")
         transcript = client.get_transcript(name=resource_name)
-        logging.info("got transcript")
-        logging.info("transcript payload is:", str(payload))
-        logging.info("transcript is:", transcript.name)
-        logging.info(f"Transcript available at {transcript.docs_destination.export_uri}")
-        logging.info("trying to download google_doc")
+        print("got transcript")
+        print("transcript payload is:", str(payload))
+        print("transcript is:", transcript.name)
+        print(f"Transcript available at {transcript.docs_destination.export_uri}")
+        print("trying to download google_doc")
         try:
             google_transcript = GoogleTranscript()
-            google_transcript.download_google_doc()
+            google_transcript.url = transcript.docs_destination.export_uri
+            google_transcript.download_google_doc(export_mime=
+                                                  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                                                  output_file=f'{transcript.name}')
         except Exception:
             traceback.print_exc()
 
