@@ -46,6 +46,7 @@ class GoogleTranscript():
             print(f"Download {int(status.progress() * 100)}%.")
 
         print(f"Downloaded '{output_file}' successfully.")
+        return output_file
 
 
     def _parse_transcript_id(self):
@@ -60,3 +61,8 @@ class GoogleTranscript():
 
     def upload_transcript(self):
         return
+
+google_transcript = GoogleTranscript()
+google_transcript.url = "https://docs.google.com/document/d/1dfhVq27Le7fbT24Xv4yo5OiVuhPShkcQASd_cI6o_Ic/edit?usp=drive_web"
+google_transcript.download_google_doc(export_mime='application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                                      output_file=f'temp.docx')
