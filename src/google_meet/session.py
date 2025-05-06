@@ -1,6 +1,8 @@
+import logging
 import threading
 import traceback
 
+from exceptiongroup import print_exc
 from google.auth.transport import requests as google_requests
 from google.apps import meet_v2 as meet
 from google.apps import meet
@@ -72,16 +74,20 @@ class GoogleSession():
         payload = json.loads(message.data)
         resource_name = payload.get("transcript").get("name")
 
+        logging.info("got transcript name")
         client = meet.ConferenceRecordsServiceClient(credentials=self.creds)
+        logging.info("got client")
         transcript = client.get_transcript(name=resource_name)
-
-        google_transcript = GoogleTranscript()
-
-        google_transcript.download_google_doc()
-
-        print("transcript payload is:", str(payload))
-        print("transcript is:", transcript.name)
-        print(f"Transcript available at {transcript.docs_destination.export_uri}")
+        logging.info("got transcript")
+        logging.info("transcript payload is:", str(payload))
+        logging.info("transcript is:", transcript.name)
+        logging.info(f"Transcript available at {transcript.docs_destination.export_uri}")
+        logging.info("trying to download google_doc")
+        try:
+            google_transcript = GoogleTranscript()
+            google_transcript.download_google_doc()
+        except Exception:
+            traceback.print_exc()
 
     def on_message(self, message: pubsub_v1.subscriber.message.Message) -> None:
         """Handles an incoming event from the Google Cloud Pub/Sub API."""
