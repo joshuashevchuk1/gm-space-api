@@ -1,4 +1,6 @@
 import requests
+
+from src.config import config
 from src.google_meet.auth import GoogleAuth
 from google.apps import meet_v2 as meet
 
@@ -9,6 +11,7 @@ class GoogleSpace():
         self.space_name = None
         self.space_uri = None
         self.meet_key = None
+        self.config = config.Config()
 
     def create_space(self):
         auth = GoogleAuth()
