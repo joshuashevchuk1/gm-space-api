@@ -27,7 +27,9 @@ class GoogleSpace():
         return response
 
     def _post_space(self):
-        url = "http://localhost:8080/document"
+        host = self.config.get_g_base_host()
+        port = self.config.get_g_base_port()
+        url = f"http://{host}:{port}/document"
         headers = {
             "accept": "application/json",
             "Content-Type": "application/json"

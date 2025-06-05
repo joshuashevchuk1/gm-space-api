@@ -62,6 +62,12 @@ class Config:
     def get_g_meet_subscription_name(self):
         return self.get('g_meet.subscription_name')
 
+    def get_g_base_host(self):
+        return self.get('g_base.host')
+
+    def get_g_base_port(self):
+        return self.get('g_base.port')
+
     def get_mongo_host(self):
         return self.get('mongo.host')
 
