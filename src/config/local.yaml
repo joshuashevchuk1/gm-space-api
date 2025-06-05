@@ -1,3 +1,6 @@
+g_base:
+  host: "localhost"
+  port: "8080"
 g_meet:
   topic_name: "projects/zd-hackathon-2025/topics/workspace-events"
   subscription_name: "projects/zd-hackathon-2025/subscriptions/workspace-events-sub"
