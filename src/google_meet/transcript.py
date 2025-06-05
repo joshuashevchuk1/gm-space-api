@@ -1,5 +1,6 @@
 import re
 
+import requests
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 import io
@@ -15,7 +16,32 @@ class GoogleTranscript():
         self.url = None
         self.file_id = None
 
-    def download_google_doc(self, export_mime='application/pdf', output_file='output.pdf'):
+    def _post_transcript(self, meet_key, file_path):
+        url = f"http://localhost:8080/{meet_key}/transcript"
+
+        # Metadata to send as form fields
+        data = {
+            "meet_key": self.meet_key,
+            "space_name": self.space_name,
+            "space_uri": self.space_uri,
+        }
+
+        # Open the file you want to upload
+        with open(file_path, 'rb') as f:
+            files = {
+                "file": (file_path, f, "application/octet-stream")  # adjust MIME type as needed
+            }
+
+            response = requests.post(url, data=data, files=files)
+
+        return response
+
+    def upload_google_doc(self, google_doc):
+        self.file_id = self._parse_transcript_id()
+
+
+    def download_transcript(self, export_mime='application/pdf', output_file='output.pdf'):
+        output_file = 'output.pdf'
         self.file_id = self._parse_transcript_id()
 
         creds = None

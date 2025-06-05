@@ -85,8 +85,9 @@ class GoogleSession():
         try:
             google_transcript = GoogleTranscript()
             google_transcript.url = transcript.docs_destination.export_uri
-            google_transcript.download_google_doc(export_mime='application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            google_transcript.download_transcript(export_mime='application/vnd.openxmlformats-officedocument.wordprocessingml.document',
                                                   output_file=f'temp.docx')
+            google_transcript.upload_google_doc(transcript)
         except Exception:
             traceback.print_exc()
 
