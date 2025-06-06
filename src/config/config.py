@@ -5,15 +5,6 @@ import logging.config
 
 
 class Config:
-    _instance = None
-
-    def __new__(cls, env=None, path="../config"):
-        if cls._instance is None:
-            cls._instance = super(Config, cls).__new__(cls)
-            # Ensure instance gets initialized with env and path on first instantiation
-            cls._instance._init(env, path)
-        return cls._instance
-
     def __init__(self):
         self.g_meet_topic_name = "projects/zd-hackathon-2025/topics/workspace-events"
         self.g_meet_subscription_name= "projects/zd-hackathon-2025/subscriptions/workspace-events-sub"

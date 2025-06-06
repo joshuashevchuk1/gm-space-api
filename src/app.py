@@ -11,8 +11,8 @@ class GMApp:
         self.config = config.Config()
         self.port = self.config.get_g_space_port()
         self.app = FastAPI(
-            title="GM Base API",
-            description="A modular FastAPI app with home and health check endpoints.",
+            title="GM Space API",
+            description="A modular FastAPI for handling google meet sessions and recording transcripts",
             version="1.0.0",
         )
         self._include_routes()
