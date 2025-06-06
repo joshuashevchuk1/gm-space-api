@@ -7,6 +7,7 @@ import io
 import os
 from googleapiclient.http import MediaIoBaseDownload
 from google.oauth2.credentials import Credentials
+from src.config import config
 
 SCOPES = ['https://www.googleapis.com/auth/meetings.space.created','https://www.googleapis.com/auth/drive.readonly']
 
@@ -15,9 +16,10 @@ class GoogleTranscript():
         self.creds = None
         self.url = None
         self.file_id = None
+        self.config = config.Config()
 
     def _post_transcript(self, meet_key, file_path):
-        url = f"http://localhost:8080/{meet_key}/transcript"
+        url = f"http://{self.config.get_g_base_host()}:{self.config.get_g_base_port()}/{meet_key}/transcript"
 
         # Metadata to send as form fields
         data = {

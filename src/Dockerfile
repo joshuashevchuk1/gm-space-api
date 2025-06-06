@@ -14,7 +14,7 @@ ENV PYTHONPATH=/data/src:$PYTHONPATH
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Expose your app's port
-EXPOSE 8000
+EXPOSE 8010
 
 # Run the FastAPI app using your GMApp class
 CMD ["python", "src/app.py"]
